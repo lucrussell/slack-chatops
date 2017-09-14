@@ -1,0 +1,27 @@
+slack_token: xoxb-
+bot_name: U81TYUTC2
+broker_groups:
+  broker1:
+    brokers:
+      - kafka:9092
+      - kafka:9092
+    consumer_groups:
+      topic1:
+        group_name: group_id_1
+      topic2:
+        group_name: group_id_2
+    graphs:
+      graph1: http://grafana-monitoring.com/render/dashboard/db/my-dashboard1
+      graph2: http://grafana-monitoring.com/render/dashboard/db/my-dashboard2
+  broker2:
+    brokers:
+      - kafka:9092
+      - kafka:9092
+    consumer_groups:
+      topic1:
+        group_name: group_id_1
+      topic2:
+        group_name: group_id_2
+    graphs:
+      graph3: http://grafana-monitoring.com/render/dashboard/db/my-dashboard3
+      graph4: http://grafana-monitoring.com/render/dashboard/db/my-dashboard4

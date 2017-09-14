@@ -1,0 +1,35 @@
+version: "3"
+services:
+  slackbot:
+    build: .
+    depends_on:
+      - kafka
+      - zookeeper
+    volumes:
+      - .:/opt/server
+    networks:
+      - backend
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - backend
+  kafka:
+    image: wurstmeister/kafka:0.9.0.1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - ZOOKEEPER_CONNECTION_TIMEOUT_MS=180000
+      - KAFKA_CREATE_TOPICS=topic1:1:1,topic2:1:1
+    networks:
+      - backend
+
+networks:
+  backend:
