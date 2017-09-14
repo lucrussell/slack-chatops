@@ -1,4 +1,4 @@
-# Kafka Lag REST Proxy
+# Kafka Slack Bot
 
 A Slack bot for getting graphs and other data from Kafka.
 
