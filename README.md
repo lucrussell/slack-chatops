@@ -9,7 +9,7 @@ To build and run:
 $ docker-compose up -d
 ```
 
-This assumes entries for Kafka and Zookeeper in /etc/hosts, i.e.:
+This assumes entries for Kafka and Zookeeper in `/etc/hosts`, i.e.:
 
 ```
 127.0.0.1 kafka
