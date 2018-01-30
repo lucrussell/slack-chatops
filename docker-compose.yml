@@ -1,24 +1,17 @@
-version: "3"
+version: "2"
 services:
-  slackbot:
-    build: .
-    depends_on:
-      - kafka
-      - zookeeper
-    volumes:
-      - .:/opt/server
-    networks:
-      - backend
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
     networks:
       - backend
+
   kafka:
-    image: wurstmeister/kafka:0.9.0.1
+    image: wurstmeister/kafka:1.0.0
     ports:
       - "9092:9092"
+      - "1099:1099"
     depends_on:
       - zookeeper
     environment:
@@ -28,8 +21,64 @@ services:
       - KAFKA_ADVERTISED_HOST_NAME=kafka
       - ZOOKEEPER_CONNECTION_TIMEOUT_MS=180000
       - KAFKA_CREATE_TOPICS=topic1:1:1,topic2:1:1
+      - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka -Dcom.sun.management.jmxremote.rmi.port=1099
+      - JMX_PORT=1099
     networks:
       - backend
+
+  kafka-jmx-exporter:
+    build: ./prometheus-jmx-exporter
+    ports:
+      - "8080:8080"
+    links:
+      - kafka
+    environment:
+      - JMX_PORT=1099
+      - JMX_HOST=kafka
+      - HTTP_PORT=8080
+      - JMX_EXPORTER_CONFIG_FILE=kafka.yml
+    networks:
+        - backend
+
+  prometheus:
+    ports:
+      - 9090:9090/tcp
+    image: prom/prometheus:v2.0.0
+    volumes:
+      - ./etc:/etc/prometheus
+      - prometheus_data:/prometheus
+    links:
+      - kafka-jmx-exporter
+    restart: always
+    networks:
+        - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    links:
+      - prometheus
+    environment:
+        GF_SECURITY_ADMIN_PASSWORD: "admin"
+        GF_USERS_ALLOW_SIGN_UP: "false"
+        GF_AUTH_ANONYMOUS_ENABLED: "true"
+        GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+        GF_DASHBOARDS_JSON_ENABLED: "true"
+        GF_DASHBOARDS_JSON_PATH: /opt/grafana
+        GF_SERVER_ROOT_URL: http://localhost:3000/
+        GF_SERVER_ROUTER_LOGGING: "true"
+        GF_LOG_LEVEL: "debug"
+        GF_LOG_MODE: "console file"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./etc:/opt/grafana
+    networks:
+        - backend
+
+volumes:
+    prometheus_data: {}
+    grafana_data: {}
 
 networks:
   backend:
