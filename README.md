@@ -20,24 +20,34 @@ Set up local networking to Kafka/Zookeeper with the following lines in `/etc/hos
     127.0.0.1 kafka
     127.0.0.1 zookeeper
 
+Create a Slack bot on [Slack](https://api.slack.com/bot-users).
+
 ## Usage
 Start the supporting services:
 
     docker-compose up -d
 
+Start the slackbot:
+
+    python slackbot/bot.py --config=config.yaml
+
 Send some messages:
 
     for i in `seq 1 3`;
     do
-            echo "{\"from\": \"alice\", \"to\":\"bob\", \"amount\": 3}"  | kafkacat -b kafka:9092 -t transactions -p 0
+            echo "hello"  | kafkacat -b kafka:9092 -t transactions
     done
+
+View the Kafka dashboard at http://localhost:3000:
+
+![Kafka dashboard](kafka.png)
 
 Request application metrics, e.g.:
  
 
-    @little_bot help me!
-    @little_bot please show me the Kafka graphs
-    @little_bot restart 1
+    @handy_bot help me!
+    @handy_bot please show me the Kafka graphs
+    @handy_bot restart 1
 
-(where `little_bot` is the name you chose when setting up the Slack bot).
+(where `handy_bot` is the name you chose when setting up the Slack bot).
 

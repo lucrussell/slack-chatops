@@ -1,4 +1,4 @@
 slack_token: <YOUR TOKEN>
-bot_name: little_bot
+bot_name: handy_bot
 graph_urls:
       kafka: http://localhost:3000/dashboard/file/Kafka.json?orgId=1

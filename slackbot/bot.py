@@ -87,7 +87,7 @@ class SlackBot(object):
                 question = question.strip().lower()
                 channel = event['channel']
                 if 'list graph shortcuts' in question:
-                    self.respond(channel, f'Graph shortcuts: {self.graph_shortcuts}')
+                    self.respond(channel, f'I know about these graphs: {self.graph_shortcuts}')
                 elif 'graph' in question:
                     self.respond(channel, 'Please wait...', True)
                 elif 'help' in question:
