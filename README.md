@@ -1,6 +1,6 @@
 # Kafka Slack Bot
 
-A simple Slack chatops bot, further writeup [here](TODO).
+A simple Slack chatops bot, further writeup [here](https://medium.com/@russell.luc/simple-chatops-with-kafka-grafana-prometheus-and-slack-764ece59e707).
 
 ## Prerequisites
 - Python 3.6+
